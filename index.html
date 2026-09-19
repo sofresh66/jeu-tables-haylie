@@ -22,7 +22,7 @@
       --color-bg-mid: #e8f0fe;
       --color-bg-end: #f2e9fc;
 
-      --color-card-bg: rgba(255, 255, 255, 0.92);
+      --color-card-bg: rgba(255, 255, 255, 0.94);
       --color-primary: #8b5cf6;
       --color-primary-hover: #7c3aed;
       --color-primary-shadow: rgba(139, 92, 246, 0.35);
@@ -40,6 +40,7 @@
       --color-text-muted: #64748b;
 
       --radius-large: 28px;
+      --radius-card: 22px;
       --radius-button: 20px;
     }
 
@@ -105,10 +106,10 @@
 
     /* Bouton pour activer / couper le son */
     .sound-toggle-btn {
-      position: absolute;
+      position: fixed;
       top: 20px;
       right: 20px;
-      z-index: 20;
+      z-index: 50;
       background: white;
       border: 2px solid #e2e8f0;
       border-radius: 50%;
@@ -119,7 +120,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transition: transform 0.2s, background 0.2s;
     }
     .sound-toggle-btn:hover {
@@ -139,7 +140,7 @@
       border-radius: var(--radius-large);
       box-shadow: 0 20px 45px rgba(100, 80, 150, 0.12),
                   0 0 0 1px rgba(255, 255, 255, 0.7) inset;
-      padding: 32px 28px;
+      padding: 30px 24px;
       text-align: center;
       position: relative;
       z-index: 10;
@@ -152,11 +153,11 @@
     }
     .screen.active {
       display: block;
-      animation: fadeIn 0.35s ease-out;
+      animation: fadeIn 0.3s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -174,12 +175,12 @@
       font-weight: 600;
       padding: 6px 14px;
       border-radius: 999px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .home-avatar {
-      font-size: 4.8rem;
-      margin-bottom: 8px;
+      font-size: 4.6rem;
+      margin-bottom: 6px;
       display: inline-block;
       animation: bounce 2s infinite ease-in-out;
     }
@@ -195,7 +196,7 @@
       background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
     }
 
@@ -203,7 +204,7 @@
       font-size: 1.15rem;
       color: var(--color-text-muted);
       line-height: 1.5;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       font-weight: 500;
     }
 
@@ -213,7 +214,7 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
     .pill {
       background: #f8fafc;
@@ -225,16 +226,16 @@
       border-radius: 14px;
     }
 
-    /* Bouton principal "Jouer" / "Rejouer" */
+    /* Boutons principaux */
     .btn-cta {
       background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
       color: white;
       font-family: var(--font-main);
-      font-size: 1.45rem;
+      font-size: 1.4rem;
       font-weight: 700;
       border: none;
       border-radius: var(--radius-button);
-      padding: 16px 36px;
+      padding: 16px 32px;
       cursor: pointer;
       width: 100%;
       min-height: 64px;
@@ -244,23 +245,314 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
+      margin-bottom: 12px;
     }
     .btn-cta:hover {
       transform: translateY(-2px);
       box-shadow: 0 14px 30px var(--color-primary-shadow);
     }
     .btn-cta:active {
-      transform: scale(0.96);
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      background: #f8fafc;
+      color: #6366f1;
+      font-family: var(--font-main);
+      font-size: 1.15rem;
+      font-weight: 700;
+      border: 2px solid #e0e7ff;
+      border-radius: var(--radius-button);
+      padding: 14px 28px;
+      cursor: pointer;
+      width: 100%;
+      min-height: 56px;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .btn-secondary:hover {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      transform: translateY(-1px);
+    }
+    .btn-secondary:active {
+      transform: scale(0.98);
+    }
+
+    /* Bouton discret de réinitialisation */
+    .btn-reset-link {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 6px;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+    .btn-reset-link:hover {
+      color: #f43f5e;
+    }
+
+    /* Bouton retour standard */
+    .btn-back {
+      background: #f1f5f9;
+      color: #475569;
+      font-family: var(--font-main);
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 24px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      transition: all 0.15s ease;
+    }
+    .btn-back:hover {
+      background: #e2e8f0;
+      color: #1e293b;
     }
 
     /* =========================================================
-       4. ÉCRAN DE JEU
+       4. ÉCRAN DE SÉLECTION DE NIVEAU
        ========================================================= */
+    .screen-header-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-bottom: 6px;
+    }
+    .screen-header-subtitle {
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+      margin-bottom: 20px;
+    }
+
+    .levels-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .level-card {
+      background: #ffffff;
+      border: 2.5px solid #e2e8f0;
+      border-radius: var(--radius-card);
+      padding: 16px 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .level-card.unlocked:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(139, 92, 246, 0.15);
+      border-color: #c084fc;
+    }
+    .level-card.unlocked:active {
+      transform: scale(0.98);
+    }
+
+    .level-card.locked {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      cursor: not-allowed;
+      opacity: 0.78;
+    }
+
+    .level-icon-badge {
+      font-size: 2.2rem;
+      min-width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+    }
+
+    .level-info {
+      flex: 1;
+    }
+    .level-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+    .level-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .level-status-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .level-status-pill.unlocked {
+      background: #ecfdf5;
+      color: #059669;
+    }
+    .level-status-pill.locked {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .level-desc {
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .level-score-info {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #d97706;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .level-locked-info {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    /* =========================================================
+       5. ÉCRAN DES BADGES
+       ========================================================= */
+    .badges-stats-card {
+      background: #faf5ff;
+      border: 2px solid #e9d5ff;
+      border-radius: 18px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .badges-stats-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #7e22ce;
+    }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .badge-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 14px 10px;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 145px;
+    }
+
+    .badge-card.earned {
+      border-color: #fbcfe8;
+      background: linear-gradient(180deg, #ffffff 0%, #fdf2f8 100%);
+      box-shadow: 0 6px 16px rgba(236, 72, 153, 0.12);
+    }
+
+    .badge-card.locked {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      opacity: 0.58;
+    }
+
+    .badge-icon {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+    .badge-card.earned:hover .badge-icon {
+      transform: scale(1.15) rotate(6deg);
+    }
+    .badge-card.locked .badge-icon {
+      filter: grayscale(100%);
+    }
+
+    .badge-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .badge-desc {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .badge-status-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-top: auto;
+    }
+    .badge-status-tag.earned {
+      background: #ecfdf5;
+      color: #059669;
+    }
+    .badge-status-tag.locked {
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    /* =========================================================
+       6. ÉCRAN DE JEU
+       ========================================================= */
+    .game-level-tag {
+      display: inline-block;
+      background: #ede9fe;
+      color: #6d28d9;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
     .game-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-weight: 600;
       font-size: 1.05rem;
     }
@@ -299,7 +591,7 @@
       background: #e2e8f0;
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     .progress-bar-fill {
       height: 100%;
@@ -314,15 +606,15 @@
       background: #ffffff;
       border: 2px solid #ede9fe;
       border-radius: 24px;
-      padding: 24px 16px;
-      margin-bottom: 22px;
+      padding: 22px 16px;
+      margin-bottom: 20px;
       box-shadow: 0 8px 20px rgba(139, 92, 246, 0.08);
     }
     .question-label {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--color-text-muted);
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -338,7 +630,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .btn-answer {
@@ -427,7 +719,7 @@
       border: 1.5px solid #fecdd3;
     }
 
-    /* Bouton Question Suivante (visible après un clic) */
+    /* Bouton Question Suivante */
     .btn-next {
       background: #4f46e5;
       color: white;
@@ -461,11 +753,11 @@
     }
 
     /* =========================================================
-       5. ÉCRAN DE FIN DE PARTIE
+       7. ÉCRAN DE FIN DE PARTIE
        ========================================================= */
     .end-avatar {
-      font-size: 5rem;
-      margin-bottom: 10px;
+      font-size: 4.8rem;
+      margin-bottom: 6px;
       animation: bounce 2s infinite ease-in-out;
     }
 
@@ -473,22 +765,48 @@
       font-size: 2.1rem;
       font-weight: 700;
       color: #1e1b4b;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .end-message {
       font-size: 1.35rem;
       font-weight: 700;
       color: #8b5cf6;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* Bannière de déblocage d'un nouveau niveau */
+    .unlock-banner {
+      display: none;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      border-radius: 18px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2);
+      animation: pulseBanner 1.5s infinite alternate;
+    }
+    .unlock-banner.visible {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    @keyframes pulseBanner {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
     }
 
     .score-card {
       background: #f8fafc;
       border: 2px dashed #cbd5e1;
       border-radius: 22px;
-      padding: 20px 16px;
-      margin-bottom: 24px;
+      padding: 18px 16px;
+      margin-bottom: 20px;
     }
 
     .score-big {
@@ -511,7 +829,7 @@
       gap: 6px;
       font-size: 1.8rem;
       flex-wrap: wrap;
-      margin-top: 8px;
+      margin-top: 6px;
     }
     .end-star-icon {
       color: #e2e8f0;
@@ -522,6 +840,61 @@
       transform: scale(1.1);
     }
 
+    .end-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* =========================================================
+       8. POPUP NOTIFICATION DE NOUVEAU BADGE (TOAST ANIMÉ)
+       ========================================================= */
+    .badge-popup-overlay {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120%);
+      background: #ffffff;
+      border: 3px solid #f59e0b;
+      border-radius: 24px;
+      padding: 16px 24px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18), 0 0 25px rgba(245, 158, 11, 0.3);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      max-width: 90%;
+    }
+    .badge-popup-overlay.show {
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .badge-popup-icon {
+      font-size: 2.8rem;
+      animation: bounce 1.2s infinite;
+    }
+    .badge-popup-content {
+      text-align: left;
+    }
+    .badge-popup-header {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #d97706;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-popup-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e1b4b;
+    }
+    .badge-popup-desc {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
     /* Canvas pour l'effet confettis */
     #confettiCanvas {
       position: fixed;
@@ -530,13 +903,13 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 50;
+      z-index: 40;
     }
 
-    /* Responsive ajustements pour petits écrans mobiles */
+    /* Responsive ajustements pour petits écrans */
     @media (max-width: 440px) {
       .game-container {
-        padding: 24px 18px;
+        padding: 22px 16px;
       }
       .question-text {
         font-size: 2.4rem;
@@ -547,6 +920,9 @@
       }
       .game-title {
         font-size: 1.9rem;
+      }
+      .badges-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -564,6 +940,16 @@
     🔊
   </button>
 
+  <!-- Popup toast pour l'annonce d'un nouveau badge débloqué -->
+  <div id="badgePopup" class="badge-popup-overlay" role="alert" aria-live="assertive">
+    <div id="badgePopupIcon" class="badge-popup-icon">🥇</div>
+    <div class="badge-popup-content">
+      <div class="badge-popup-header">🎉 Nouveau badge débloqué !</div>
+      <div id="badgePopupTitle" class="badge-popup-title">Championne</div>
+      <div id="badgePopupDesc" class="badge-popup-desc">Avoir eu 10/10 à un niveau</div>
+    </div>
+  </div>
+
   <!-- Canvas pour les confettis lors de la victoire -->
   <canvas id="confettiCanvas"></canvas>
 
@@ -578,27 +964,82 @@
       <div class="home-avatar" aria-hidden="true">🦄</div>
       <h1 id="homeTitle" class="game-title">L'aventure de Haylie</h1>
       <p class="game-subtitle">
-        Deviens la championne des tables de multiplication tout en t'amusant ! ⭐
+        Choisis ton aventure et deviens la reine des tables de multiplication ! ⭐
       </p>
 
       <div class="tables-pills">
-        <span class="pill">Table de 1 🟢</span>
-        <span class="pill">Table de 2 🟡</span>
-        <span class="pill">Table de 5 🔵</span>
-        <span class="pill">Table de 10 🟣</span>
+        <span class="pill">Niveaux 1 à 4 🎯</span>
+        <span class="pill">Badges à collectionner 🏆</span>
+        <span class="pill">Sans chrono 🌈</span>
       </div>
 
-      <button id="btnStart" class="btn-cta">
+      <!-- Bouton Jouer : mène à l'écran de sélection de niveau -->
+      <button id="btnPlayHome" class="btn-cta">
         <span>Jouer !</span>
         <span aria-hidden="true">🚀</span>
+      </button>
+
+      <!-- Bouton pour voir la collection de badges -->
+      <button id="btnViewBadges" class="btn-secondary">
+        <span>Mes badges</span>
+        <span id="homeBadgeCounter" class="star-icon" aria-hidden="true">🏆 0/6</span>
+      </button>
+
+      <!-- Lien discret pour réinitialiser la progression -->
+      <div>
+        <button id="btnResetProgress" class="btn-reset-link" title="Effacer la sauvegarde et repartir à zéro">
+          Réinitialiser ma progression
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         2. ÉCRAN DE SÉLECTION DE NIVEAU
+         ========================================================= -->
+    <section id="screenLevels" class="screen" aria-labelledby="levelsTitle">
+      <h2 id="levelsTitle" class="screen-header-title">Choisis ton niveau 🗺️</h2>
+      <p class="screen-header-subtitle">Progresse étape par étape pour tout débloquer !</p>
+
+      <div class="levels-list" id="levelsContainer">
+        <!-- Niveaux 1 à 4 injectés dynamiquement en JavaScript -->
+      </div>
+
+      <button id="btnBackToHomeFromLevels" class="btn-back">
+        <span aria-hidden="true">🏠</span>
+        <span>Retour à l'accueil</span>
       </button>
     </section>
 
     <!-- =========================================================
-         2. ÉCRAN DE JEU
+         3. ÉCRAN DES BADGES
+         ========================================================= -->
+    <section id="screenBadges" class="screen" aria-labelledby="badgesTitle">
+      <h2 id="badgesTitle" class="screen-header-title">Mes badges 🏆</h2>
+      <p class="screen-header-subtitle">Tous les trophées remportés par Haylie !</p>
+
+      <div class="badges-stats-card">
+        <span class="badges-stats-text" id="badgesCountLabel">0 sur 6 badges débloqués</span>
+        <span aria-hidden="true" style="font-size: 1.4rem;">✨</span>
+      </div>
+
+      <div class="badges-grid" id="badgesContainer">
+        <!-- 6 cartes de badges injectées dynamiquement -->
+      </div>
+
+      <button id="btnBackToHomeFromBadges" class="btn-back">
+        <span aria-hidden="true">🏠</span>
+        <span>Retour à l'accueil</span>
+      </button>
+    </section>
+
+    <!-- =========================================================
+         4. ÉCRAN DE JEU
          ========================================================= -->
     <section id="screenGame" class="screen" aria-labelledby="questionText">
       
+      <!-- Étiquette du niveau en cours -->
+      <div id="gameLevelTag" class="game-level-tag">Niveau 1 : Tables de 1, 2, 5 et 10</div>
+
       <!-- En-tête : Numéro de question + Score en étoiles -->
       <div class="game-header">
         <div id="questionIndicator" class="question-indicator">Question 1 / 10</div>
@@ -641,12 +1082,18 @@
     </section>
 
     <!-- =========================================================
-         3. ÉCRAN DE FIN
+         5. ÉCRAN DE FIN
          ========================================================= -->
     <section id="screenEnd" class="screen" aria-labelledby="endTitle">
       <div class="end-avatar" id="endAvatar" aria-hidden="true">🏆</div>
       <h2 id="endTitle" class="end-title">Partie terminée !</h2>
       <p id="endMessage" class="end-message">Bravo Haylie !</p>
+
+      <!-- Message spécial si un niveau supérieur vient d'être débloqué -->
+      <div id="unlockBanner" class="unlock-banner">
+        <span aria-hidden="true">🔓</span>
+        <span id="unlockBannerText">Niveau suivant débloqué !</span>
+      </div>
 
       <div class="score-card">
         <div class="score-big">
@@ -657,10 +1104,25 @@
         </div>
       </div>
 
-      <button id="btnRestart" class="btn-cta">
-        <span>Rejouer !</span>
-        <span aria-hidden="true">🔄</span>
-      </button>
+      <div class="end-actions">
+        <!-- Rejouer ce même niveau -->
+        <button id="btnReplayLevel" class="btn-cta">
+          <span>Rejouer ce niveau !</span>
+          <span aria-hidden="true">🔄</span>
+        </button>
+
+        <!-- Choisir un autre niveau -->
+        <button id="btnGoToLevels" class="btn-secondary">
+          <span>Choisir un niveau</span>
+          <span aria-hidden="true">🗺️</span>
+        </button>
+
+        <!-- Retour direct à l'accueil -->
+        <button id="btnBackToHomeFromEnd" class="btn-back" style="margin-top: 0;">
+          <span aria-hidden="true">🏠</span>
+          <span>Accueil</span>
+        </button>
+      </div>
     </section>
 
   </main>
@@ -675,33 +1137,187 @@
        ========================================================= */
     const PRENOM = "Haylie";
 
-    // Tables autorisées pour les parties (les plus faciles pour débuter)
-    const TABLES_AUTORISEES = [1, 2, 5, 10];
+    // Clé utilisée pour la sauvegarde persistante dans localStorage
+    const STORAGE_KEY = "haylie-tables-v1";
 
     // Nombre total de questions par partie
     const TOTAL_QUESTIONS = 10;
 
     /* =========================================================
-       ÉTAT DU JEU
+       DÉFINITION DES 4 NIVEAUX
+       - Niveau 1 : tables de 1, 2, 5, 10
+       - Niveau 2 : tables de 3 et 4 (verrouillé au départ)
+       - Niveau 3 : tables de 6, 7, 8, 9 (verrouillé au départ)
+       - Niveau 4 : mélange de toutes les tables de 1 à 10 (verrouillé)
        ========================================================= */
+    const NIVEAUX = [
+      {
+        id: 1,
+        titre: "Niveau 1 : Les Fondations",
+        tables: [1, 2, 5, 10],
+        emoji: "🌱",
+        description: "Tables de 1, 2, 5 et 10 (les plus faciles pour débuter)"
+      },
+      {
+        id: 2,
+        titre: "Niveau 2 : Les Pépites",
+        tables: [3, 4],
+        emoji: "🌸",
+        description: "Tables de 3 et 4"
+      },
+      {
+        id: 3,
+        titre: "Niveau 3 : Le Grand Défi",
+        tables: [6, 7, 8, 9],
+        emoji: "🔥",
+        description: "Tables de 6, 7, 8 et 9"
+      },
+      {
+        id: 4,
+        titre: "Niveau 4 : Grande Championne",
+        tables: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        emoji: "👑",
+        description: "Mélange de toutes les tables (1 à 10)"
+      }
+    ];
+
+    /* =========================================================
+       DÉFINITION DES 6 BADGES
+       ========================================================= */
+    const BADGES = [
+      {
+        id: "badge_premiere_partie",
+        icone: "🥉",
+        titre: "Première partie",
+        description: "Avoir joué au moins 1 fois",
+        verifier: (sauvegarde, context) => sauvegarde.partiesJouees >= 1
+      },
+      {
+        id: "badge_perseverante",
+        icone: "🥈",
+        titre: "Persévérante",
+        description: "Avoir joué au moins 5 fois",
+        verifier: (sauvegarde, context) => sauvegarde.partiesJouees >= 5
+      },
+      {
+        id: "badge_championne",
+        icone: "🥇",
+        titre: "Championne",
+        description: "Avoir eu 10/10 à un niveau",
+        verifier: (sauvegarde, context) => {
+          return Object.values(sauvegarde.meilleursScores).some(s => s === 10) || context.score === 10;
+        }
+      },
+      {
+        id: "badge_reine",
+        icone: "💎",
+        titre: "Reine des tables",
+        description: "Avoir débloqué les 4 niveaux",
+        verifier: (sauvegarde, context) => sauvegarde.niveauxDebloques.length >= 4
+      },
+      {
+        id: "badge_serie",
+        icone: "🔥",
+        titre: "Série de 5",
+        description: "5 bonnes réponses d'affilée dans une partie",
+        verifier: (sauvegarde, context) => context.meilleureSerie >= 5
+      },
+      {
+        id: "badge_sans_faute",
+        icone: "⭐",
+        titre: "Sans faute",
+        description: "10/10 au niveau 4",
+        verifier: (sauvegarde, context) => {
+          return sauvegarde.meilleursScores[4] === 10 || (context.niveauId === 4 && context.score === 10);
+        }
+      }
+    ];
+
+    /* =========================================================
+       GESTION DE LA SAUVEGARDE (localStorage)
+       ========================================================= */
+    let sauvegarde = {
+      niveauxDebloques: [1], // Seul le niveau 1 est débloqué au départ
+      meilleursScores: { 1: 0, 2: 0, 3: 0, 4: 0 },
+      partiesJouees: 0,
+      badgesObtenus: []
+    };
+
+    function chargerSauvegarde() {
+      try {
+        const donneesBrutes = localStorage.getItem(STORAGE_KEY);
+        if (donneesBrutes) {
+          const parsed = JSON.parse(donneesBrutes);
+          sauvegarde.niveauxDebloques = Array.isArray(parsed.niveauxDebloques) && parsed.niveauxDebloques.length > 0
+            ? parsed.niveauxDebloques
+            : [1];
+          sauvegarde.meilleursScores = parsed.meilleursScores || { 1: 0, 2: 0, 3: 0, 4: 0 };
+          sauvegarde.partiesJouees = typeof parsed.partiesJouees === "number" ? parsed.partiesJouees : 0;
+          sauvegarde.badgesObtenus = Array.isArray(parsed.badgesObtenus) ? parsed.badgesObtenus : [];
+        }
+      } catch (e) {
+        console.warn("Impossible de lire la sauvegarde localStorage, réinitialisation :", e);
+      }
+    }
+
+    function enregistrerSauvegarde() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sauvegarde));
+      } catch (e) {
+        console.warn("Erreur lors de l'enregistrement dans localStorage :", e);
+      }
+    }
+
+    function reinitialiserSauvegarde() {
+      const confirmation = confirm(`Es-tu sûre de vouloir réinitialiser toute la progression de ${PRENOM} ?`);
+      if (confirmation) {
+        localStorage.removeItem(STORAGE_KEY);
+        sauvegarde = {
+          niveauxDebloques: [1],
+          meilleursScores: { 1: 0, 2: 0, 3: 0, 4: 0 },
+          partiesJouees: 0,
+          badgesObtenus: []
+        };
+        enregistrerSauvegarde();
+        mettreAJourInterfaceAccueil();
+        afficherNotificationBadge("🔄", "Progression réinitialisée", "La partie repart à zéro !");
+      }
+    }
+
+    /* =========================================================
+       ÉTAT DE LA PARTIE EN COURS
+       ========================================================= */
+    let niveauActuelId = 1;        // Niveau en cours de jeu (1, 2, 3 ou 4)
     let questions = [];            // Liste des 10 questions de la partie
-    let indexQuestionActuelle = 0; // Index de la question en cours (0 à 9)
-    let score = 0;                 // Nombre de bonnes réponses obtenues
-    let reponseEnAttente = false;  // Empêche les clics multiples
-    let sonActive = true;          // Contrôle du son Web Audio API
+    let indexQuestionActuelle = 0; // Index de la question courante (0 à 9)
+    let score = 0;                 // Nombre de bonnes réponses
+    let reponseEnAttente = false;  // Évite les clics multiples
+    let serieActuelle = 0;         // Série de bonnes réponses consécutives
+    let meilleureSerie = 0;        // Meilleure série réalisée durant la partie
+    let sonActive = true;          // Contrôle audio
 
     /* =========================================================
        SÉLECTION DES ÉLÉMENTS DU DOM
        ========================================================= */
     const screenHome = document.getElementById("screenHome");
+    const screenLevels = document.getElementById("screenLevels");
+    const screenBadges = document.getElementById("screenBadges");
     const screenGame = document.getElementById("screenGame");
     const screenEnd = document.getElementById("screenEnd");
 
-    const btnStart = document.getElementById("btnStart");
-    const btnRestart = document.getElementById("btnRestart");
-    const btnNext = document.getElementById("btnNext");
-    const soundToggleBtn = document.getElementById("soundToggleBtn");
+    const btnPlayHome = document.getElementById("btnPlayHome");
+    const btnViewBadges = document.getElementById("btnViewBadges");
+    const btnResetProgress = document.getElementById("btnResetProgress");
+    const homeBadgeCounter = document.getElementById("homeBadgeCounter");
 
+    const levelsContainer = document.getElementById("levelsContainer");
+    const btnBackToHomeFromLevels = document.getElementById("btnBackToHomeFromLevels");
+
+    const badgesContainer = document.getElementById("badgesContainer");
+    const badgesCountLabel = document.getElementById("badgesCountLabel");
+    const btnBackToHomeFromBadges = document.getElementById("btnBackToHomeFromBadges");
+
+    const gameLevelTag = document.getElementById("gameLevelTag");
     const questionIndicator = document.getElementById("questionIndicator");
     const scoreCounter = document.getElementById("scoreCounter");
     const progressBarFill = document.getElementById("progressBarFill");
@@ -709,16 +1325,28 @@
     const answersGrid = document.getElementById("answersGrid");
     const answerButtons = Array.from(answersGrid.querySelectorAll(".btn-answer"));
     const feedbackBox = document.getElementById("feedbackBox");
+    const btnNext = document.getElementById("btnNext");
 
     const endAvatar = document.getElementById("endAvatar");
     const endTitle = document.getElementById("endTitle");
     const endMessage = document.getElementById("endMessage");
+    const unlockBanner = document.getElementById("unlockBanner");
+    const unlockBannerText = document.getElementById("unlockBannerText");
     const endScore = document.getElementById("endScore");
     const endStarsRow = document.getElementById("endStarsRow");
+    const btnReplayLevel = document.getElementById("btnReplayLevel");
+    const btnGoToLevels = document.getElementById("btnGoToLevels");
+    const btnBackToHomeFromEnd = document.getElementById("btnBackToHomeFromEnd");
+
+    const soundToggleBtn = document.getElementById("soundToggleBtn");
+
+    const badgePopup = document.getElementById("badgePopup");
+    const badgePopupIcon = document.getElementById("badgePopupIcon");
+    const badgePopupTitle = document.getElementById("badgePopupTitle");
+    const badgePopupDesc = document.getElementById("badgePopupDesc");
 
     /* =========================================================
        GESTION DU SON (Web Audio API - 100% Hors Ligne)
-       Pas besoin de fichier mp3 externe !
        ========================================================= */
     let audioCtx = null;
 
@@ -734,7 +1362,6 @@
       }
     }
 
-    // Joue une note douce (type carillon ou marimba)
     function playTone(freq, startTime, duration, type = "sine") {
       if (!sonActive || !audioCtx) return;
       try {
@@ -744,7 +1371,6 @@
         osc.type = type;
         osc.frequency.setValueAtTime(freq, startTime);
 
-        // Attaque douce et extinction progressive
         gain.gain.setValueAtTime(0.0001, startTime);
         gain.gain.exponentialRampToValueAtTime(0.2, startTime + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
@@ -759,35 +1385,39 @@
       }
     }
 
-    // Carillon joyeux de bonne réponse (arpeggio montant C5 -> E5 -> G5 -> C6)
     function playVictoryChime() {
       if (!sonActive || !audioCtx) return;
       const now = audioCtx.currentTime;
-      playTone(523.25, now + 0.00, 0.25, "triangle"); // Do
-      playTone(659.25, now + 0.08, 0.25, "triangle"); // Mi
-      playTone(783.99, now + 0.16, 0.25, "triangle"); // Sol
-      playTone(1046.50, now + 0.24, 0.40, "triangle"); // Do aigu
+      playTone(523.25, now + 0.00, 0.22, "triangle"); // Do
+      playTone(659.25, now + 0.08, 0.22, "triangle"); // Mi
+      playTone(783.99, now + 0.16, 0.22, "triangle"); // Sol
+      playTone(1046.50, now + 0.24, 0.38, "triangle"); // Do aigu
     }
 
-    // Carillon doux d'encouragement (très doux, jamais punitif)
     function playEncouragingChime() {
       if (!sonActive || !audioCtx) return;
       const now = audioCtx.currentTime;
-      playTone(392.00, now + 0.00, 0.25, "sine"); // Sol
-      playTone(329.63, now + 0.12, 0.35, "sine"); // Mi
+      playTone(392.00, now + 0.00, 0.22, "sine"); // Sol
+      playTone(329.63, now + 0.12, 0.32, "sine"); // Mi
     }
 
-    // Fanfare finale de célébration
     function playFinalCelebration() {
       if (!sonActive || !audioCtx) return;
       const now = audioCtx.currentTime;
       const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
       notes.forEach((freq, idx) => {
-        playTone(freq, now + idx * 0.1, 0.35, "triangle");
+        playTone(freq, now + idx * 0.09, 0.35, "triangle");
       });
     }
 
-    // Basculer l'état du son
+    function playBadgeUnlockChime() {
+      if (!sonActive || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      playTone(659.25, now + 0.00, 0.18, "sine");
+      playTone(880.00, now + 0.09, 0.18, "sine");
+      playTone(1174.66, now + 0.18, 0.35, "triangle");
+    }
+
     soundToggleBtn.addEventListener("click", () => {
       sonActive = !sonActive;
       soundToggleBtn.textContent = sonActive ? "🔊" : "🔇";
@@ -799,12 +1429,10 @@
 
     /* =========================================================
        GÉNÉRATEUR DE QUESTIONS ET RÉPONSES
-       - Tables : 1, 2, 5 et 10
+       - Tables spécifiques selon le niveau
        - Multiplicateurs : 1 à 10
        - Mauvaises réponses proches (±1 à ±8), jamais ridicules
        ========================================================= */
-
-    // Mélange un tableau de façon aléatoire (algorithme Fisher-Yates)
     function shuffleArray(array) {
       const copy = [...array];
       for (let i = copy.length - 1; i > 0; i--) {
@@ -814,12 +1442,10 @@
       return copy;
     }
 
-    // Génère 3 mauvaises réponses proches et crédibles
     function genererFaussesReponses(bonneReponse, table, multiplicateur) {
       const options = new Set();
       options.add(bonneReponse);
 
-      // Pièges classiques très proches et réalistes
       const candidats = [
         bonneReponse + table,
         bonneReponse - table,
@@ -839,11 +1465,9 @@
         bonneReponse - 8
       ];
 
-      // On mélange les candidats potentiels
       const candidatsMelanges = shuffleArray(candidats);
 
       for (const val of candidatsMelanges) {
-        // La réponse doit être positive (> 0), différente de la bonne, et avec un écart max de 8
         if (val > 0 && val !== bonneReponse && !options.has(val)) {
           if (Math.abs(val - bonneReponse) <= 8) {
             options.add(val);
@@ -852,7 +1476,6 @@
         if (options.size === 4) break;
       }
 
-      // Si besoin de compléter jusqu'à 4 options (sécurité)
       let ecart = 1;
       while (options.size < 4) {
         const plus = bonneReponse + ecart;
@@ -865,32 +1488,24 @@
       return Array.from(options);
     }
 
-    // Crée le pack de 10 questions variées pour la partie
-    function preparerPartie() {
+    function preparerPartie(niveauId) {
+      const cfgNiveau = NIVEAUX.find(n => n.id === niveauId) || NIVEAUX[0];
       const pool = [];
 
-      // Crée toutes les combinaisons possibles (4 tables × 10 multiplicateurs = 40 questions)
-      TABLES_AUTORISEES.forEach(table => {
+      cfgNiveau.tables.forEach(table => {
         for (let m = 1; m <= 10; m++) {
           pool.push({ table, multiplicateur: m });
         }
       });
 
-      // On mélange l'ensemble des questions possibles
       const poolMelange = shuffleArray(pool);
-
-      // On sélectionne les 10 premières
       const selection = poolMelange.slice(0, TOTAL_QUESTIONS);
 
-      // Pour chaque question, on construit l'objet complet
       return selection.map(item => {
-        // Alterne parfois l'ordre pour varier (ex: 5 × 3 ou 3 × 5)
         const inverse = Math.random() > 0.5;
         const a = inverse ? item.multiplicateur : item.table;
         const b = inverse ? item.table : item.multiplicateur;
         const bonneReponse = a * b;
-
-        // Génération des 4 choix possibles mélangés
         const choix = shuffleArray(genererFaussesReponses(bonneReponse, item.table, item.multiplicateur));
 
         return {
@@ -906,52 +1521,168 @@
        NAVIGATION ENTRE LES ÉCRANS
        ========================================================= */
     function afficherEcran(ecranCible) {
-      [screenHome, screenGame, screenEnd].forEach(ecran => {
+      [screenHome, screenLevels, screenBadges, screenGame, screenEnd].forEach(ecran => {
         ecran.classList.remove("active");
       });
       ecranCible.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* =========================================================
+       RENDU DE L'ÉCRAN D'ACCUEIL & DES COMPTEURS
+       ========================================================= */
+    function mettreAJourInterfaceAccueil() {
+      const totalBadgesGagnes = sauvegarde.badgesObtenus.length;
+      homeBadgeCounter.textContent = `🏆 ${totalBadgesGagnes}/${BADGES.length}`;
+    }
+
+    /* =========================================================
+       RENDU DE L'ÉCRAN DE SÉLECTION DE NIVEAU
+       ========================================================= */
+    function ouvrirEcranNiveaux() {
+      initAudioContext();
+      levelsContainer.innerHTML = "";
+
+      NIVEAUX.forEach(niveau => {
+        const estDebloque = sauvegarde.niveauxDebloques.includes(niveau.id);
+        const meilleurScore = sauvegarde.meilleursScores[niveau.id] || 0;
+
+        const card = document.createElement("div");
+        card.className = `level-card ${estDebloque ? "unlocked" : "locked"}`;
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", estDebloque ? "0" : "-1");
+
+        let scoreHtml = "";
+        if (estDebloque) {
+          if (meilleurScore > 0) {
+            const etoiles = "⭐".repeat(Math.min(meilleurScore, 5));
+            scoreHtml = `<div class="level-score-info"><span>${etoiles}</span> <span>Record : ${meilleurScore}/10</span></div>`;
+          } else {
+            scoreHtml = `<div class="level-score-info" style="color: #64748b;">Pas encore joué</div>`;
+          }
+        } else {
+          scoreHtml = `<div class="level-locked-info">🔒 Réussis le niveau précédent avec 8/10 pour débloquer</div>`;
+        }
+
+        card.innerHTML = `
+          <div class="level-icon-badge" aria-hidden="true">${estDebloque ? niveau.emoji : "🔒"}</div>
+          <div class="level-info">
+            <div class="level-top-row">
+              <span class="level-name">${niveau.titre}</span>
+              <span class="level-status-pill ${estDebloque ? "unlocked" : "locked"}">
+                ${estDebloque ? "Débloqué ✨" : "Verrouillé 🔒"}
+              </span>
+            </div>
+            <div class="level-desc">${niveau.description}</div>
+            ${scoreHtml}
+          </div>
+        `;
+
+        if (estDebloque) {
+          card.addEventListener("click", () => demarrerPartie(niveau.id));
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              demarrerPartie(niveau.id);
+            }
+          });
+        }
+
+        levelsContainer.appendChild(card);
+      });
+
+      afficherEcran(screenLevels);
+    }
+
+    /* =========================================================
+       RENDU DE L'ÉCRAN DES BADGES
+       ========================================================= */
+    function ouvrirEcranBadges() {
+      initAudioContext();
+      badgesContainer.innerHTML = "";
+
+      const totalObtenus = sauvegarde.badgesObtenus.length;
+      badgesCountLabel.textContent = `${totalObtenus} sur ${BADGES.length} badges débloqués`;
+
+      BADGES.forEach(badge => {
+        const estGagne = sauvegarde.badgesObtenus.includes(badge.id);
+
+        const card = document.createElement("div");
+        card.className = `badge-card ${estGagne ? "earned" : "locked"}`;
+
+        card.innerHTML = `
+          <div class="badge-icon" aria-hidden="true">${badge.icone}</div>
+          <div class="badge-title">${badge.titre}</div>
+          <div class="badge-desc">${badge.description}</div>
+          <div class="badge-status-tag ${estGagne ? "earned" : "locked"}">
+            ${estGagne ? "Obtenu ⭐" : "À débloquer 🔒"}
+          </div>
+        `;
+
+        badgesContainer.appendChild(card);
+      });
+
+      afficherEcran(screenBadges);
+    }
+
+    /* =========================================================
+       NOTIFICATIONS TOAST DE BADGE DÉBLOQUÉ
+       ========================================================= */
+    let popupTimeoutId = null;
+
+    function afficherNotificationBadge(icone, titre, description) {
+      badgePopupIcon.textContent = icone;
+      badgePopupTitle.textContent = titre;
+      badgePopupDesc.textContent = description;
+
+      badgePopup.classList.add("show");
+      playBadgeUnlockChime();
+
+      if (popupTimeoutId) clearTimeout(popupTimeoutId);
+      popupTimeoutId = setTimeout(() => {
+        badgePopup.classList.remove("show");
+      }, 4200);
     }
 
     /* =========================================================
        DÉROULEMENT DU JEU
        ========================================================= */
-    function demarrerPartie() {
+    function demarrerPartie(niveauId) {
       initAudioContext();
+      niveauActuelId = niveauId;
       score = 0;
       indexQuestionActuelle = 0;
+      serieActuelle = 0;
+      meilleureSerie = 0;
       reponseEnAttente = false;
 
-      // Génère les 10 questions
-      questions = preparerPartie();
+      const cfg = NIVEAUX.find(n => n.id === niveauId) || NIVEAUX[0];
+      gameLevelTag.textContent = `${cfg.titre}`;
 
-      // Mise à jour de l'affichage initial
+      questions = preparerPartie(niveauId);
+
       scoreCounter.textContent = "0";
       afficherEcran(screenGame);
       afficherQuestion();
     }
 
-    // Affiche la question courante
     function afficherQuestion() {
       reponseEnAttente = false;
       const q = questions[indexQuestionActuelle];
 
-      // Mise à jour des indicateurs
       const numQuestion = indexQuestionActuelle + 1;
       questionIndicator.textContent = `Question ${numQuestion} / ${TOTAL_QUESTIONS}`;
-      
+
       const pourcentage = (numQuestion / TOTAL_QUESTIONS) * 100;
       progressBarFill.style.width = `${pourcentage}%`;
 
-      // Texte de la multiplication
       questionText.textContent = `${q.facteurA} × ${q.facteurB} = ?`;
 
-      // Réinitialisation de la zone de feedback et du bouton suivant
       feedbackBox.className = "feedback-box";
       feedbackBox.textContent = "";
       feedbackBox.classList.remove("visible");
       btnNext.style.display = "none";
 
-      // Configuration des 4 boutons de réponse
       q.choix.forEach((valeur, i) => {
         const btn = answerButtons[i];
         btn.textContent = valeur;
@@ -960,7 +1691,6 @@
       });
     }
 
-    // Gestion du clic sur une réponse
     function verifierReponse(boutonClique, valeurChoisie) {
       if (reponseEnAttente) return;
       reponseEnAttente = true;
@@ -968,12 +1698,15 @@
       const q = questions[indexQuestionActuelle];
       const estCorrect = (valeurChoisie === q.bonneReponse);
 
-      // Désactiver tous les boutons pour éviter les clics multiples
       answerButtons.forEach(btn => btn.disabled = true);
 
       if (estCorrect) {
-        // Bonne réponse !
         score++;
+        serieActuelle++;
+        if (serieActuelle > meilleureSerie) {
+          meilleureSerie = serieActuelle;
+        }
+
         scoreCounter.textContent = score;
         boutonClique.classList.add("correct");
 
@@ -982,10 +1715,9 @@
 
         playVictoryChime();
       } else {
-        // Réponse incorrecte mais bienveillante
+        serieActuelle = 0;
         boutonClique.classList.add("wrong");
 
-        // Révéler la bonne réponse en vert
         answerButtons.forEach(btn => {
           if (parseInt(btn.textContent, 10) === q.bonneReponse) {
             btn.classList.add("correct");
@@ -998,7 +1730,6 @@
         playEncouragingChime();
       }
 
-      // Proposer le bouton "Question suivante" pour que l'enfant avance à son propre rythme
       if (indexQuestionActuelle < TOTAL_QUESTIONS - 1) {
         btnNext.innerHTML = `<span>Question suivante</span> <span aria-hidden="true">➔</span>`;
       } else {
@@ -1007,24 +1738,67 @@
       btnNext.style.display = "inline-flex";
     }
 
-    // Passer à la question suivante ou à la fin
     function passerQuestionSuivante() {
       indexQuestionActuelle++;
       if (indexQuestionActuelle < TOTAL_QUESTIONS) {
         afficherQuestion();
       } else {
-        afficherFinDePartie();
+        terminerPartie();
       }
     }
 
     /* =========================================================
-       ÉCRAN DE FIN ET MESSAGES ADAPTÉS
+       FIN DE PARTIE & SAUVEGARDE DE LA PROGRESSION
        ========================================================= */
-    function afficherFinDePartie() {
+    function terminerPartie() {
+      // 1. Incrémenter le nombre total de parties jouées
+      sauvegarde.partiesJouees++;
+
+      // 2. Mettre à jour le meilleur score pour ce niveau
+      const ancienMeilleur = sauvegarde.meilleursScores[niveauActuelId] || 0;
+      if (score > ancienMeilleur) {
+        sauvegarde.meilleursScores[niveauActuelId] = score;
+      }
+
+      // 3. Déblocage du niveau suivant si score >= 8/10
+      let niveauDebloqueCeCoupCi = null;
+      if (score >= 8 && niveauActuelId < 4) {
+        const niveauSuivant = niveauActuelId + 1;
+        if (!sauvegarde.niveauxDebloques.includes(niveauSuivant)) {
+          sauvegarde.niveauxDebloques.push(niveauSuivant);
+          niveauDebloqueCeCoupCi = niveauSuivant;
+        }
+      }
+
+      // 4. Vérification des nouveaux badges gagnés
+      const contexteEvaluation = {
+        score: score,
+        niveauId: niveauActuelId,
+        meilleureSerie: meilleureSerie
+      };
+
+      const nouveauxBadges = [];
+      BADGES.forEach(b => {
+        if (!sauvegarde.badgesObtenus.includes(b.id)) {
+          if (b.verifier(sauvegarde, contexteEvaluation)) {
+            sauvegarde.badgesObtenus.push(b.id);
+            nouveauxBadges.push(b);
+          }
+        }
+      });
+
+      // 5. Sauvegarder dans le localStorage
+      enregistrerSauvegarde();
+      mettreAJourInterfaceAccueil();
+
+      // 6. Rendre l'écran de fin
+      afficherFinDePartie(niveauDebloqueCeCoupCi, nouveauxBadges);
+    }
+
+    function afficherFinDePartie(nouveauNiveau, nouveauxBadges) {
       afficherEcran(screenEnd);
       endScore.textContent = score;
 
-      // Message personnalisé selon les règles demandées
       let message = "";
       let avatar = "🏆";
 
@@ -1050,6 +1824,15 @@
       endAvatar.textContent = avatar;
       endMessage.textContent = message;
 
+      // Bannière de déblocage si un nouveau niveau vient d'être débloqué
+      if (nouveauNiveau) {
+        const nomNiveauSuivant = NIVEAUX.find(n => n.id === nouveauNiveau)?.titre || `Niveau ${nouveauNiveau}`;
+        unlockBannerText.textContent = `🔓 Bravo ! ${nomNiveauSuivant} débloqué !`;
+        unlockBanner.classList.add("visible");
+      } else {
+        unlockBanner.classList.remove("visible");
+      }
+
       // Affichage visuel des 10 étoiles
       endStarsRow.innerHTML = "";
       for (let i = 0; i < TOTAL_QUESTIONS; i++) {
@@ -1062,6 +1845,14 @@
           star.textContent = "☆";
         }
         endStarsRow.appendChild(star);
+      }
+
+      // Popup d'annonce des nouveaux badges débloqués (s'il y en a)
+      if (nouveauxBadges.length > 0) {
+        const premier = nouveauxBadges[0];
+        setTimeout(() => {
+          afficherNotificationBadge(premier.icone, premier.titre, premier.description);
+        }, 600);
       }
     }
 
@@ -1085,7 +1876,7 @@
       particles = [];
       const couleurs = ["#ec4899", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b", "#f43f5e"];
 
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 75; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * -canvas.height,
@@ -1132,19 +1923,31 @@
     /* =========================================================
        ÉCOUTEURS D'ÉVÉNEMENTS
        ========================================================= */
-    btnStart.addEventListener("click", demarrerPartie);
-    btnRestart.addEventListener("click", demarrerPartie);
+    // Accueil
+    btnPlayHome.addEventListener("click", ouvrirEcranNiveaux);
+    btnViewBadges.addEventListener("click", ouvrirEcranBadges);
+    btnResetProgress.addEventListener("click", reinitialiserSauvegarde);
+
+    // Retour vers l'accueil
+    btnBackToHomeFromLevels.addEventListener("click", () => afficherEcran(screenHome));
+    btnBackToHomeFromBadges.addEventListener("click", () => afficherEcran(screenHome));
+    btnBackToHomeFromEnd.addEventListener("click", () => afficherEcran(screenHome));
+
+    // Écran de fin
+    btnReplayLevel.addEventListener("click", () => demarrerPartie(niveauActuelId));
+    btnGoToLevels.addEventListener("click", ouvrirEcranNiveaux);
+
+    // Écran de jeu
     btnNext.addEventListener("click", passerQuestionSuivante);
 
-    // Écouteur sur les 4 boutons de réponse
     answerButtons.forEach(btn => {
-      btn.addEventListener("click", (e) => {
+      btn.addEventListener("click", () => {
         const valeur = parseInt(btn.textContent, 10);
         verifierReponse(btn, valeur);
       });
     });
 
-    // Raccourci clavier pratique : touches 1, 2, 3, 4 ou Espace/Entrée
+    // Raccourcis clavier (1, 2, 3, 4 et Entrée/Espace)
     window.addEventListener("keydown", (e) => {
       if (screenGame.classList.contains("active")) {
         if (!reponseEnAttente) {
@@ -1158,12 +1961,14 @@
             btnNext.click();
           }
         }
-      } else if (screenHome.classList.contains("active") && (e.key === "Enter" || e.key === " ")) {
-        btnStart.click();
-      } else if (screenEnd.classList.contains("active") && (e.key === "Enter" || e.key === " ")) {
-        btnRestart.click();
       }
     });
+
+    /* =========================================================
+       INITIALISATION AU CHARGEMENT DE LA PAGE
+       ========================================================= */
+    chargerSauvegarde();
+    mettreAJourInterfaceAccueil();
 
   </script>
 </body>
