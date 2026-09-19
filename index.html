@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L'aventure de Haylie - Jeu de tables de multiplication</title>
+
+  <!-- Police arrondie et joyeuse "Fredoka" depuis Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       1. VARIABLES ET THÈME GLOBAL
+       ========================================================= */
+    :root {
+      --font-main: 'Fredoka', 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
+      
+      /* Couleurs douces et féeriques */
+      --color-bg-start: #ffeef8;
+      --color-bg-mid: #e8f0fe;
+      --color-bg-end: #f2e9fc;
+
+      --color-card-bg: rgba(255, 255, 255, 0.92);
+      --color-primary: #8b5cf6;
+      --color-primary-hover: #7c3aed;
+      --color-primary-shadow: rgba(139, 92, 246, 0.35);
+
+      --color-success: #10b981;
+      --color-success-bg: #ecfdf5;
+      --color-success-border: #34d399;
+
+      --color-wrong: #f43f5e;
+      --color-wrong-bg: #fff1f2;
+      --color-wrong-border: #fb7185;
+
+      --color-star: #f59e0b;
+      --color-text-dark: #334155;
+      --color-text-muted: #64748b;
+
+      --radius-large: 28px;
+      --radius-button: 20px;
+    }
+
+    /* Réinitialisation de base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-bg-start) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
+      color: var(--color-text-dark);
+      padding: 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Décorations d'arrière-plan légères */
+    .bg-shape {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+    .bg-shape-1 {
+      top: 5%;
+      left: 6%;
+      font-size: 3rem;
+      animation-delay: 0s;
+    }
+    .bg-shape-2 {
+      bottom: 8%;
+      right: 6%;
+      font-size: 3.5rem;
+      animation-delay: 1.5s;
+    }
+    .bg-shape-3 {
+      top: 12%;
+      right: 10%;
+      font-size: 2.2rem;
+      animation-delay: 3s;
+    }
+    .bg-shape-4 {
+      bottom: 12%;
+      left: 8%;
+      font-size: 2.6rem;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-16px) rotate(8deg); }
+    }
+
+    /* Bouton pour activer / couper le son */
+    .sound-toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .sound-toggle-btn:hover {
+      transform: scale(1.08);
+      background: #faf5ff;
+    }
+
+    /* =========================================================
+       2. CONTENEUR PRINCIPAL DU JEU
+       ========================================================= */
+    .game-container {
+      width: 100%;
+      max-width: 540px;
+      background: var(--color-card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: var(--radius-large);
+      box-shadow: 0 20px 45px rgba(100, 80, 150, 0.12),
+                  0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+      padding: 32px 28px;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      margin: auto;
+    }
+
+    /* Masquage des écrans non actifs */
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================================
+       3. ÉCRAN D'ACCUEIL
+       ========================================================= */
+    .home-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fdf2f8;
+      border: 1.5px solid #fbcfe8;
+      color: #db2777;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .home-avatar {
+      font-size: 4.8rem;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    .game-title {
+      font-size: 2.3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .game-subtitle {
+      font-size: 1.15rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    /* Badges des tables incluses */
+    .tables-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .pill {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 14px;
+    }
+
+    /* Bouton principal "Jouer" / "Rejouer" */
+    .btn-cta {
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      color: white;
+      font-family: var(--font-main);
+      font-size: 1.45rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-button);
+      padding: 16px 36px;
+      cursor: pointer;
+      width: 100%;
+      min-height: 64px;
+      box-shadow: 0 10px 25px var(--color-primary-shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px var(--color-primary-shadow);
+    }
+    .btn-cta:active {
+      transform: scale(0.96);
+    }
+
+    /* =========================================================
+       4. ÉCRAN DE JEU
+       ========================================================= */
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .question-indicator {
+      color: var(--color-text-muted);
+      background: #f1f5f9;
+      padding: 6px 14px;
+      border-radius: 12px;
+    }
+
+    .stars-counter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #b45309;
+      background: #fef3c7;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .stars-counter .star-icon {
+      font-size: 1.2rem;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.2); }
+    }
+
+    /* Barre de progression */
+    .progress-bar-container {
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Carte de la question */
+    .question-card {
+      background: #ffffff;
+      border: 2px solid #ede9fe;
+      border-radius: 24px;
+      padding: 24px 16px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.08);
+    }
+    .question-label {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .question-text {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      letter-spacing: 2px;
+    }
+
+    /* Grille des 4 réponses (adaptée aux tablettes) */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .btn-answer {
+      background: #ffffff;
+      border: 2.5px solid #e2e8f0;
+      border-radius: var(--radius-button);
+      min-height: 68px;
+      font-family: var(--font-main);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-answer:hover:not(:disabled) {
+      border-color: #c084fc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(192, 132, 252, 0.2);
+    }
+
+    .btn-answer:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    /* États lors de la vérification */
+    .btn-answer.correct {
+      background-color: var(--color-success-bg) !important;
+      border-color: var(--color-success-border) !important;
+      color: var(--color-success) !important;
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25) !important;
+      animation: popSuccess 0.4s ease;
+    }
+
+    .btn-answer.wrong {
+      background-color: var(--color-wrong-bg) !important;
+      border-color: var(--color-wrong-border) !important;
+      color: var(--color-wrong) !important;
+      animation: shakeWrong 0.4s ease;
+    }
+
+    @keyframes popSuccess {
+      0% { transform: scale(0.95); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1.02); }
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* Zone de feedback */
+    .feedback-box {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 16px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      transition: all 0.2s ease;
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    .feedback-box.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .feedback-box.correct-msg {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1.5px solid #a7f3d0;
+    }
+    .feedback-box.wrong-msg {
+      background: #fff1f2;
+      color: #9f1239;
+      border: 1.5px solid #fecdd3;
+    }
+
+    /* Bouton Question Suivante (visible après un clic) */
+    .btn-next {
+      background: #4f46e5;
+      color: white;
+      font-family: var(--font-main);
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-button);
+      padding: 14px 28px;
+      cursor: pointer;
+      width: 100%;
+      min-height: 60px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+      animation: popNext 0.3s ease-out forwards;
+    }
+    .btn-next:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+    }
+    .btn-next:active {
+      transform: scale(0.97);
+    }
+
+    @keyframes popNext {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* =========================================================
+       5. ÉCRAN DE FIN DE PARTIE
+       ========================================================= */
+    .end-avatar {
+      font-size: 5rem;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    .end-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-bottom: 8px;
+    }
+
+    .end-message {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #8b5cf6;
+      margin-bottom: 20px;
+    }
+
+    .score-card {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 22px;
+      padding: 20px 16px;
+      margin-bottom: 24px;
+    }
+
+    .score-big {
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .score-total {
+      font-size: 1.8rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    /* Rangée d'étoiles gagnées */
+    .end-stars-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      font-size: 1.8rem;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .end-star-icon {
+      color: #e2e8f0;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .end-star-icon.filled {
+      color: var(--color-star);
+      transform: scale(1.1);
+    }
+
+    /* Canvas pour l'effet confettis */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* Responsive ajustements pour petits écrans mobiles */
+    @media (max-width: 440px) {
+      .game-container {
+        padding: 24px 18px;
+      }
+      .question-text {
+        font-size: 2.4rem;
+      }
+      .btn-answer {
+        min-height: 62px;
+        font-size: 1.6rem;
+      }
+      .game-title {
+        font-size: 1.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Éléments décoratifs en arrière-plan -->
+  <div class="bg-shape bg-shape-1">🦄</div>
+  <div class="bg-shape bg-shape-2">⭐</div>
+  <div class="bg-shape bg-shape-3">✨</div>
+  <div class="bg-shape bg-shape-4">🎉</div>
+
+  <!-- Bouton son (Activer / Désactiver) -->
+  <button id="soundToggleBtn" class="sound-toggle-btn" aria-label="Couper ou activer le son" title="Activer / Couper le son">
+    🔊
+  </button>
+
+  <!-- Canvas pour les confettis lors de la victoire -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Boîte principale du jeu -->
+  <main class="game-container">
+
+    <!-- =========================================================
+         1. ÉCRAN D'ACCUEIL
+         ========================================================= -->
+    <section id="screenHome" class="screen active" aria-labelledby="homeTitle">
+      <div class="home-badge">✨ Jeu spécial pour Haylie ✨</div>
+      <div class="home-avatar" aria-hidden="true">🦄</div>
+      <h1 id="homeTitle" class="game-title">L'aventure de Haylie</h1>
+      <p class="game-subtitle">
+        Deviens la championne des tables de multiplication tout en t'amusant ! ⭐
+      </p>
+
+      <div class="tables-pills">
+        <span class="pill">Table de 1 🟢</span>
+        <span class="pill">Table de 2 🟡</span>
+        <span class="pill">Table de 5 🔵</span>
+        <span class="pill">Table de 10 🟣</span>
+      </div>
+
+      <button id="btnStart" class="btn-cta">
+        <span>Jouer !</span>
+        <span aria-hidden="true">🚀</span>
+      </button>
+    </section>
+
+    <!-- =========================================================
+         2. ÉCRAN DE JEU
+         ========================================================= -->
+    <section id="screenGame" class="screen" aria-labelledby="questionText">
+      
+      <!-- En-tête : Numéro de question + Score en étoiles -->
+      <div class="game-header">
+        <div id="questionIndicator" class="question-indicator">Question 1 / 10</div>
+        <div class="stars-counter">
+          <span class="star-icon" aria-hidden="true">⭐</span>
+          <span id="scoreCounter">0</span>
+        </div>
+      </div>
+
+      <!-- Barre de progression fluide -->
+      <div class="progress-bar-container" aria-hidden="true">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+      </div>
+
+      <!-- Carte de la multiplication courante -->
+      <div class="question-card">
+        <div class="question-label">Combien font :</div>
+        <div id="questionText" class="question-text">3 × 4 = ?</div>
+      </div>
+
+      <!-- 4 boutons de réponse en 2x2 -->
+      <div class="answers-grid" id="answersGrid">
+        <button class="btn-answer" data-index="0">-</button>
+        <button class="btn-answer" data-index="1">-</button>
+        <button class="btn-answer" data-index="2">-</button>
+        <button class="btn-answer" data-index="3">-</button>
+      </div>
+
+      <!-- Zone de feedback (Bravo ou message doux d'encouragement) -->
+      <div id="feedbackBox" class="feedback-box" role="status" aria-live="polite">
+        <!-- Message injecté en JavaScript -->
+      </div>
+
+      <!-- Bouton pour passer à la question suivante à son rythme -->
+      <button id="btnNext" class="btn-next">
+        <span>Question suivante</span>
+        <span aria-hidden="true">➔</span>
+      </button>
+
+    </section>
+
+    <!-- =========================================================
+         3. ÉCRAN DE FIN
+         ========================================================= -->
+    <section id="screenEnd" class="screen" aria-labelledby="endTitle">
+      <div class="end-avatar" id="endAvatar" aria-hidden="true">🏆</div>
+      <h2 id="endTitle" class="end-title">Partie terminée !</h2>
+      <p id="endMessage" class="end-message">Bravo Haylie !</p>
+
+      <div class="score-card">
+        <div class="score-big">
+          <span id="endScore">10</span><span class="score-total"> / 10</span>
+        </div>
+        <div id="endStarsRow" class="end-stars-row" aria-hidden="true">
+          <!-- 10 étoiles générées par le script -->
+        </div>
+      </div>
+
+      <button id="btnRestart" class="btn-cta">
+        <span>Rejouer !</span>
+        <span aria-hidden="true">🔄</span>
+      </button>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       CODE JAVASCRIPT
+       ========================================================= -->
+  <script>
+    /* =========================================================
+       CONFIGURATION PERSONNALISABLE
+       Changez simplement le prénom ici pour personnaliser le jeu !
+       ========================================================= */
+    const PRENOM = "Haylie";
+
+    // Tables autorisées pour les parties (les plus faciles pour débuter)
+    const TABLES_AUTORISEES = [1, 2, 5, 10];
+
+    // Nombre total de questions par partie
+    const TOTAL_QUESTIONS = 10;
+
+    /* =========================================================
+       ÉTAT DU JEU
+       ========================================================= */
+    let questions = [];            // Liste des 10 questions de la partie
+    let indexQuestionActuelle = 0; // Index de la question en cours (0 à 9)
+    let score = 0;                 // Nombre de bonnes réponses obtenues
+    let reponseEnAttente = false;  // Empêche les clics multiples
+    let sonActive = true;          // Contrôle du son Web Audio API
+
+    /* =========================================================
+       SÉLECTION DES ÉLÉMENTS DU DOM
+       ========================================================= */
+    const screenHome = document.getElementById("screenHome");
+    const screenGame = document.getElementById("screenGame");
+    const screenEnd = document.getElementById("screenEnd");
+
+    const btnStart = document.getElementById("btnStart");
+    const btnRestart = document.getElementById("btnRestart");
+    const btnNext = document.getElementById("btnNext");
+    const soundToggleBtn = document.getElementById("soundToggleBtn");
+
+    const questionIndicator = document.getElementById("questionIndicator");
+    const scoreCounter = document.getElementById("scoreCounter");
+    const progressBarFill = document.getElementById("progressBarFill");
+    const questionText = document.getElementById("questionText");
+    const answersGrid = document.getElementById("answersGrid");
+    const answerButtons = Array.from(answersGrid.querySelectorAll(".btn-answer"));
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    const endAvatar = document.getElementById("endAvatar");
+    const endTitle = document.getElementById("endTitle");
+    const endMessage = document.getElementById("endMessage");
+    const endScore = document.getElementById("endScore");
+    const endStarsRow = document.getElementById("endStarsRow");
+
+    /* =========================================================
+       GESTION DU SON (Web Audio API - 100% Hors Ligne)
+       Pas besoin de fichier mp3 externe !
+       ========================================================= */
+    let audioCtx = null;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    // Joue une note douce (type carillon ou marimba)
+    function playTone(freq, startTime, duration, type = "sine") {
+      if (!sonActive || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        // Attaque douce et extinction progressive
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.2, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      } catch (e) {
+        console.warn("Erreur audio :", e);
+      }
+    }
+
+    // Carillon joyeux de bonne réponse (arpeggio montant C5 -> E5 -> G5 -> C6)
+    function playVictoryChime() {
+      if (!sonActive || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      playTone(523.25, now + 0.00, 0.25, "triangle"); // Do
+      playTone(659.25, now + 0.08, 0.25, "triangle"); // Mi
+      playTone(783.99, now + 0.16, 0.25, "triangle"); // Sol
+      playTone(1046.50, now + 0.24, 0.40, "triangle"); // Do aigu
+    }
+
+    // Carillon doux d'encouragement (très doux, jamais punitif)
+    function playEncouragingChime() {
+      if (!sonActive || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      playTone(392.00, now + 0.00, 0.25, "sine"); // Sol
+      playTone(329.63, now + 0.12, 0.35, "sine"); // Mi
+    }
+
+    // Fanfare finale de célébration
+    function playFinalCelebration() {
+      if (!sonActive || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      notes.forEach((freq, idx) => {
+        playTone(freq, now + idx * 0.1, 0.35, "triangle");
+      });
+    }
+
+    // Basculer l'état du son
+    soundToggleBtn.addEventListener("click", () => {
+      sonActive = !sonActive;
+      soundToggleBtn.textContent = sonActive ? "🔊" : "🔇";
+      if (sonActive) {
+        initAudioContext();
+        playTone(523.25, audioCtx.currentTime, 0.15, "triangle");
+      }
+    });
+
+    /* =========================================================
+       GÉNÉRATEUR DE QUESTIONS ET RÉPONSES
+       - Tables : 1, 2, 5 et 10
+       - Multiplicateurs : 1 à 10
+       - Mauvaises réponses proches (±1 à ±8), jamais ridicules
+       ========================================================= */
+
+    // Mélange un tableau de façon aléatoire (algorithme Fisher-Yates)
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // Génère 3 mauvaises réponses proches et crédibles
+    function genererFaussesReponses(bonneReponse, table, multiplicateur) {
+      const options = new Set();
+      options.add(bonneReponse);
+
+      // Pièges classiques très proches et réalistes
+      const candidats = [
+        bonneReponse + table,
+        bonneReponse - table,
+        bonneReponse + multiplicateur,
+        bonneReponse - multiplicateur,
+        bonneReponse + 1,
+        bonneReponse - 1,
+        bonneReponse + 2,
+        bonneReponse - 2,
+        bonneReponse + 3,
+        bonneReponse - 3,
+        bonneReponse + 4,
+        bonneReponse - 4,
+        bonneReponse + 5,
+        bonneReponse - 5,
+        bonneReponse + 8,
+        bonneReponse - 8
+      ];
+
+      // On mélange les candidats potentiels
+      const candidatsMelanges = shuffleArray(candidats);
+
+      for (const val of candidatsMelanges) {
+        // La réponse doit être positive (> 0), différente de la bonne, et avec un écart max de 8
+        if (val > 0 && val !== bonneReponse && !options.has(val)) {
+          if (Math.abs(val - bonneReponse) <= 8) {
+            options.add(val);
+          }
+        }
+        if (options.size === 4) break;
+      }
+
+      // Si besoin de compléter jusqu'à 4 options (sécurité)
+      let ecart = 1;
+      while (options.size < 4) {
+        const plus = bonneReponse + ecart;
+        const moins = bonneReponse - ecart;
+        if (plus > 0 && !options.has(plus)) options.add(plus);
+        if (options.size < 4 && moins > 0 && !options.has(moins)) options.add(moins);
+        ecart++;
+      }
+
+      return Array.from(options);
+    }
+
+    // Crée le pack de 10 questions variées pour la partie
+    function preparerPartie() {
+      const pool = [];
+
+      // Crée toutes les combinaisons possibles (4 tables × 10 multiplicateurs = 40 questions)
+      TABLES_AUTORISEES.forEach(table => {
+        for (let m = 1; m <= 10; m++) {
+          pool.push({ table, multiplicateur: m });
+        }
+      });
+
+      // On mélange l'ensemble des questions possibles
+      const poolMelange = shuffleArray(pool);
+
+      // On sélectionne les 10 premières
+      const selection = poolMelange.slice(0, TOTAL_QUESTIONS);
+
+      // Pour chaque question, on construit l'objet complet
+      return selection.map(item => {
+        // Alterne parfois l'ordre pour varier (ex: 5 × 3 ou 3 × 5)
+        const inverse = Math.random() > 0.5;
+        const a = inverse ? item.multiplicateur : item.table;
+        const b = inverse ? item.table : item.multiplicateur;
+        const bonneReponse = a * b;
+
+        // Génération des 4 choix possibles mélangés
+        const choix = shuffleArray(genererFaussesReponses(bonneReponse, item.table, item.multiplicateur));
+
+        return {
+          facteurA: a,
+          facteurB: b,
+          bonneReponse: bonneReponse,
+          choix: choix
+        };
+      });
+    }
+
+    /* =========================================================
+       NAVIGATION ENTRE LES ÉCRANS
+       ========================================================= */
+    function afficherEcran(ecranCible) {
+      [screenHome, screenGame, screenEnd].forEach(ecran => {
+        ecran.classList.remove("active");
+      });
+      ecranCible.classList.add("active");
+    }
+
+    /* =========================================================
+       DÉROULEMENT DU JEU
+       ========================================================= */
+    function demarrerPartie() {
+      initAudioContext();
+      score = 0;
+      indexQuestionActuelle = 0;
+      reponseEnAttente = false;
+
+      // Génère les 10 questions
+      questions = preparerPartie();
+
+      // Mise à jour de l'affichage initial
+      scoreCounter.textContent = "0";
+      afficherEcran(screenGame);
+      afficherQuestion();
+    }
+
+    // Affiche la question courante
+    function afficherQuestion() {
+      reponseEnAttente = false;
+      const q = questions[indexQuestionActuelle];
+
+      // Mise à jour des indicateurs
+      const numQuestion = indexQuestionActuelle + 1;
+      questionIndicator.textContent = `Question ${numQuestion} / ${TOTAL_QUESTIONS}`;
+      
+      const pourcentage = (numQuestion / TOTAL_QUESTIONS) * 100;
+      progressBarFill.style.width = `${pourcentage}%`;
+
+      // Texte de la multiplication
+      questionText.textContent = `${q.facteurA} × ${q.facteurB} = ?`;
+
+      // Réinitialisation de la zone de feedback et du bouton suivant
+      feedbackBox.className = "feedback-box";
+      feedbackBox.textContent = "";
+      feedbackBox.classList.remove("visible");
+      btnNext.style.display = "none";
+
+      // Configuration des 4 boutons de réponse
+      q.choix.forEach((valeur, i) => {
+        const btn = answerButtons[i];
+        btn.textContent = valeur;
+        btn.disabled = false;
+        btn.className = "btn-answer";
+      });
+    }
+
+    // Gestion du clic sur une réponse
+    function verifierReponse(boutonClique, valeurChoisie) {
+      if (reponseEnAttente) return;
+      reponseEnAttente = true;
+
+      const q = questions[indexQuestionActuelle];
+      const estCorrect = (valeurChoisie === q.bonneReponse);
+
+      // Désactiver tous les boutons pour éviter les clics multiples
+      answerButtons.forEach(btn => btn.disabled = true);
+
+      if (estCorrect) {
+        // Bonne réponse !
+        score++;
+        scoreCounter.textContent = score;
+        boutonClique.classList.add("correct");
+
+        feedbackBox.textContent = `🎉 Bravo ${PRENOM} !`;
+        feedbackBox.className = "feedback-box visible correct-msg";
+
+        playVictoryChime();
+      } else {
+        // Réponse incorrecte mais bienveillante
+        boutonClique.classList.add("wrong");
+
+        // Révéler la bonne réponse en vert
+        answerButtons.forEach(btn => {
+          if (parseInt(btn.textContent, 10) === q.bonneReponse) {
+            btn.classList.add("correct");
+          }
+        });
+
+        feedbackBox.textContent = `Presque ! C'était ${q.bonneReponse} 😊`;
+        feedbackBox.className = "feedback-box visible wrong-msg";
+
+        playEncouragingChime();
+      }
+
+      // Proposer le bouton "Question suivante" pour que l'enfant avance à son propre rythme
+      if (indexQuestionActuelle < TOTAL_QUESTIONS - 1) {
+        btnNext.innerHTML = `<span>Question suivante</span> <span aria-hidden="true">➔</span>`;
+      } else {
+        btnNext.innerHTML = `<span>Voir mon résultat</span> <span aria-hidden="true">🏆</span>`;
+      }
+      btnNext.style.display = "inline-flex";
+    }
+
+    // Passer à la question suivante ou à la fin
+    function passerQuestionSuivante() {
+      indexQuestionActuelle++;
+      if (indexQuestionActuelle < TOTAL_QUESTIONS) {
+        afficherQuestion();
+      } else {
+        afficherFinDePartie();
+      }
+    }
+
+    /* =========================================================
+       ÉCRAN DE FIN ET MESSAGES ADAPTÉS
+       ========================================================= */
+    function afficherFinDePartie() {
+      afficherEcran(screenEnd);
+      endScore.textContent = score;
+
+      // Message personnalisé selon les règles demandées
+      let message = "";
+      let avatar = "🏆";
+
+      if (score === 10) {
+        message = `🏆 Parfait ! Incroyable !`;
+        avatar = "🦄";
+        lancerConfettis();
+        playFinalCelebration();
+      } else if (score >= 8) {
+        message = `🌟 Trop forte ${PRENOM} !`;
+        avatar = "🌟";
+        lancerConfettis();
+        playFinalCelebration();
+      } else if (score >= 5) {
+        message = `😊 Bien joué ${PRENOM} !`;
+        avatar = "✨";
+      } else {
+        message = `💪 Continue ${PRENOM}, tu vas y arriver !`;
+        avatar = "🌱";
+      }
+
+      endTitle.textContent = "Partie terminée !";
+      endAvatar.textContent = avatar;
+      endMessage.textContent = message;
+
+      // Affichage visuel des 10 étoiles
+      endStarsRow.innerHTML = "";
+      for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const star = document.createElement("span");
+        star.classList.add("end-star-icon");
+        if (i < score) {
+          star.classList.add("filled");
+          star.textContent = "⭐";
+        } else {
+          star.textContent = "☆";
+        }
+        endStarsRow.appendChild(star);
+      }
+    }
+
+    /* =========================================================
+       ANIMATION DE CONFETTIS (100% Hors Ligne via Canvas)
+       ========================================================= */
+    const canvas = document.getElementById("confettiCanvas");
+    const ctx = canvas.getContext("2d");
+    let confettiAnimationId = null;
+    let particles = [];
+
+    function ajusterTailleCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", ajusterTailleCanvas);
+    ajusterTailleCanvas();
+
+    function lancerConfettis() {
+      ajusterTailleCanvas();
+      particles = [];
+      const couleurs = ["#ec4899", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b", "#f43f5e"];
+
+      for (let i = 0; i < 70; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          taille: Math.random() * 9 + 5,
+          vitesseY: Math.random() * 3 + 2,
+          vitesseX: Math.random() * 2 - 1,
+          rotation: Math.random() * 360,
+          vitesseRotation: Math.random() * 6 - 3,
+          couleur: couleurs[Math.floor(Math.random() * couleurs.length)]
+        });
+      }
+
+      if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+      animerConfettis();
+    }
+
+    function animerConfettis() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let resteParticules = false;
+
+      particles.forEach(p => {
+        p.y += p.vitesseY;
+        p.x += p.vitesseX;
+        p.rotation += p.vitesseRotation;
+
+        if (p.y < canvas.height + 20) {
+          resteParticules = true;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.couleur;
+          ctx.fillRect(-p.taille / 2, -p.taille / 2, p.taille, p.taille * 0.7);
+          ctx.restore();
+        }
+      });
+
+      if (resteParticules) {
+        confettiAnimationId = requestAnimationFrame(animerConfettis);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    /* =========================================================
+       ÉCOUTEURS D'ÉVÉNEMENTS
+       ========================================================= */
+    btnStart.addEventListener("click", demarrerPartie);
+    btnRestart.addEventListener("click", demarrerPartie);
+    btnNext.addEventListener("click", passerQuestionSuivante);
+
+    // Écouteur sur les 4 boutons de réponse
+    answerButtons.forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const valeur = parseInt(btn.textContent, 10);
+        verifierReponse(btn, valeur);
+      });
+    });
+
+    // Raccourci clavier pratique : touches 1, 2, 3, 4 ou Espace/Entrée
+    window.addEventListener("keydown", (e) => {
+      if (screenGame.classList.contains("active")) {
+        if (!reponseEnAttente) {
+          const index = ["1", "2", "3", "4"].indexOf(e.key);
+          if (index !== -1 && answerButtons[index]) {
+            answerButtons[index].click();
+          }
+        } else if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          if (btnNext.style.display !== "none") {
+            btnNext.click();
+          }
+        }
+      } else if (screenHome.classList.contains("active") && (e.key === "Enter" || e.key === " ")) {
+        btnStart.click();
+      } else if (screenEnd.classList.contains("active") && (e.key === "Enter" || e.key === " ")) {
+        btnRestart.click();
+      }
+    });
+
+  </script>
+</body>
+</html>
