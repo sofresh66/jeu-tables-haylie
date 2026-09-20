@@ -947,6 +947,62 @@
       }
     }
 
+    /* =========================================================
+       DESSIN DE LICORNE DE HAYLIE 🦄
+       Chemin relatif : images/dessin.jpg
+       ========================================================= */
+    .dessin-img {
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+      user-select: none;
+      pointer-events: none;
+      border: 3px solid #ffffff;
+      background: white;
+    }
+
+    /* 1. Sur l'écran d'accueil (~120px) */
+    .dessin-home {
+      width: 120px;
+      max-width: 120px;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
+    }
+
+    /* 2. À côté du feedback de bonne réponse (~80px) */
+    .dessin-feedback {
+      width: 80px;
+      max-width: 80px;
+      max-height: 80px;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.22);
+      animation: popSuccess 0.4s ease;
+    }
+
+    .feedback-content {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* 3. Sur l'écran de fin pour les scores >= 8/10 (~200px) */
+    .dessin-end {
+      width: 200px;
+      max-width: 85%;
+      height: auto;
+      border-radius: 26px;
+      box-shadow: 0 14px 32px rgba(236, 72, 153, 0.25);
+      margin-bottom: 8px;
+    }
+
+    .avatar-fallback-unicorn {
+      font-size: 4.6rem;
+      display: inline-block;
+    }
+
     /* Responsive ajustements pour petits écrans */
     @media (max-width: 440px) {
       .game-container {
@@ -1005,7 +1061,9 @@
          ========================================================= -->
     <section id="screenHome" class="screen active" aria-labelledby="homeTitle">
       <div class="home-badge">✨ Jeu spécial pour Haylie ✨</div>
-      <div class="home-avatar" aria-hidden="true">🦄</div>
+      <div class="home-avatar" id="homeAvatar">
+        <img src="images/dessin.jpg" alt="Licorne dessinée par Haylie" class="dessin-img dessin-home" onerror="this.onerror=null; this.outerHTML='<span class=\'avatar-fallback-unicorn\'>🦄</span>';">
+      </div>
       <h1 id="homeTitle" class="game-title">L'aventure de Haylie</h1>
       <p class="game-subtitle">
         Choisis ton aventure et deviens la reine des tables de multiplication ! ⭐
@@ -1754,7 +1812,8 @@
         scoreCounter.textContent = score;
         boutonClique.classList.add("correct");
 
-        feedbackBox.textContent = `🎉 Bravo ${PRENOM} !`;
+        // Message de félicitations avec le dessin de Haylie (ou fallback 🦄)
+        feedbackBox.innerHTML = `<div class="feedback-content"><span>🎉 Bravo ${PRENOM} !</span> <img src="images/dessin.jpg" alt="Licorne dessinée par Haylie" class="dessin-img dessin-feedback" onerror="this.onerror=null; this.outerHTML='<span style=\\'font-size:1.8rem;\\'>🦄</span>';"></div>`;
         feedbackBox.className = "feedback-box visible correct-msg";
 
         playVictoryChime();
@@ -1877,7 +1936,14 @@
       }
 
       endTitle.textContent = "Partie terminée !";
-      endAvatar.textContent = avatar;
+      
+      // 🦄 Affiche le dessin de Haylie en grand (200px) avec rebond si score >= 8/10
+      if (score >= 8) {
+        endAvatar.innerHTML = `<img src="images/dessin.jpg" alt="Licorne dessinée par Haylie" class="dessin-img dessin-end" onerror="this.onerror=null; this.outerHTML='<span class=\\'avatar-fallback-unicorn\\'>🦄</span>';">`;
+      } else {
+        endAvatar.textContent = avatar;
+      }
+
       endMessage.textContent = message;
 
       // Bannière de déblocage si un nouveau niveau vient d'être débloqué
